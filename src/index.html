@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport"
+              content="width=device-width">
+        <meta http-equiv="content-type"
+              content="text/html; charset=UTF-8">
+        <title>Mesh viewer</title>
+        <style>
+            body
+            {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+
+            #copyright-notice
+            {
+                position: absolute;
+                bottom: 3%;
+                left: 3%;
+            }
+
+            #copyright-notice a
+            {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            #copyright-notice a:hover
+            {
+                text-decoration: underline;
+            }
+
+            #luujanko-rendering-container
+            {
+                position: relative;
+                top: 0;
+                z-index: 0;
+            }
+
+            #control-panel-container
+            {
+                position: absolute;
+                top: 3%;
+                right: 3%;
+                z-index: 1;
+                padding: 20px;
+                border: 1px solid lightgray;
+                border-radius: 6px;
+                min-width: 270px;
+                background-color: rgba(255, 255, 255, 0.7);
+            }
+
+            .control-panel-field
+            {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .control-panel-field + .control-panel-field
+            {
+                margin-top: 10px;
+            }
+
+            .control-panel-field select,
+            .control-panel-field input
+            {
+                appearance: none;
+                padding: 8px;
+                margin-top: 8px;
+                border: 1px solid lightgray;
+                border-radius: 6px;
+                background-color: white;
+            }
+
+            .control-panel-field.disabled *
+            {
+                color: lightgray;
+                pointer-events: none;
+                cursor: not-allowed;
+            }
+
+            [v-cloak]
+            {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="vue-ui"
+             v-cloak>
+
+            <div id="control-panel-container">
+
+                 <div class="control-panel-field">
+
+                    <span>Model file</span>
+
+                    <select v-model="currentModelIdx">
+                        <option v-for="(model, idx) in knownModelFiles"
+                                :value="idx"
+                                :key="model.name">
+                            {{model.name}}
+                        </option>
+                    </select>
+
+                </div>
+                
+                <div class="control-panel-field"
+                     :class="{disabled: !currentModelMeshes.length}">
+
+                    <span>View distance</span>
+
+                    <input type="number"
+                           v-model="renderDistance">
+
+                </div>
+
+                <div class="control-panel-field"
+                     :class="{disabled: !currentModelMeshes.length}">
+
+                    <span>Mesh ({{currentModelMeshes.length}})</span>
+
+                    <select v-model="currentMeshIdx">
+                        <option v-for="(idx, zeroIdx) in currentModelMeshes.length"
+                                :value="zeroIdx"
+                                :key="zeroIdx">
+                            {{idx}}
+                        </option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div id="luujanko-rendering-container">
+
+                <svg id="luujanko-rendering"
+                     style="pointer-events: none;">
+                </svg>
+    
+            </div>
+
+        </div>
+
+        <div id="copyright-notice">
+
+            Mesh viewer by
+            <a href="https://www.tarpeeksihyvaesoft.com" target="_blank">Tarpeeksi Hyvae Soft</a>.
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js"></script>
+
+        <script type="module">
+            import {Luu} from "./luujanko.js";
+            import {get_meshes_from_model_file} from "./parse-model-file.js";
+            import models from "./models.js";
+
+            const ui = new Vue({
+                el: "#vue-ui",
+                data: {
+                    knownModelFiles: models,
+                    currentModelMeshes: [],
+                    currentMeshIdx: 0,
+                    currentModelIdx: 0,
+                    renderDistance: 40000,
+                },
+                computed: {
+                    // Returns the polygons that should currently be rendered, considering the
+                    // model file that has been loaded and the mesh index that has been set. The
+                    // returned polygons will be in Luujanko's Luu.ngon() format, insertable
+                    // into a Luu.mesh() object.
+                    currentPolygons: {
+                        get()
+                        {
+                            if (!this.currentModelMeshes || !this.currentModelMeshes.length)
+                            {
+                                return [];
+                            }
+
+                            const meshIdx = (Math.max(0, Math.min(this.currentMeshIdx, (this.currentModelMeshes.length - 1))));
+
+                            return this.currentModelMeshes[meshIdx];
+                        },
+                    },
+                },
+                watch: {
+                    currentModelIdx: {
+                        immediate: true,
+                        handler: async function(modelIdx)
+                        {
+                            this.currentModelMeshes = [];
+                            this.currentMeshIdx = 0;
+                                
+                            try
+                            {
+                                const srcModel = this.knownModelFiles[modelIdx];
+                                const meshesFromFile = await get_meshes_from_model_file(srcModel.name);
+                                const luujankoMeshes = meshesFromFile.map(level=>level.map(face=>Luu.ngon(face.vertices.map(v=>Luu.vertex(v.x, v.y, v.z)))));
+
+                                this.currentModelMeshes = luujankoMeshes;
+                                this.renderDistance = (srcModel.suggestedViewDistance || 40000);
+                                this.currentMeshIdx = 0;
+                            }
+                            catch (error)
+                            {
+                                window.alert(error);
+                                console.error(error);
+                            }
+                        }
+                    },
+                },
+                // Start the renderer. It'll keep running and rendering whatever polygons the
+                // UI gives it.
+                created()
+                {
+                    const uiState = this;
+                    const rotationVector = Luu.rotation(0.5, 0, 0);
+
+                    (function render_loop(timestamp = 0, frameTimeDeltaMs = 0, frameCount = 0)
+                    {
+                        // Have the SVG fill the entire viewport.
+                        const svgImage = document.getElementById("luujanko-rendering");
+                        svgImage.setAttribute("width", document.documentElement.clientWidth);
+                        svgImage.setAttribute("height", document.documentElement.clientHeight);
+
+                        rotationVector.y += (0.0006 * frameTimeDeltaMs);
+
+                        const scene = Luu.mesh(uiState.currentPolygons, {
+                            rotation: rotationVector,
+                        });
+
+                        const options = {
+                            fov: 70,
+                            farPlane: 100000000,
+                            viewRotation: Luu.rotation(0, 0, 0),
+                            viewPosition: Luu.translation(0, 0, -uiState.renderDistance),
+                        };
+
+                        Luu.render([scene], svgImage, options);
+
+                        window.requestAnimationFrame((newTimestamp)=>
+                        {
+                            render_loop(newTimestamp,
+                                        (newTimestamp - timestamp),
+                                        (frameCount + 1));
+                        });
+                    })();
+                }
+            });
+        </script>
+    </body>
+</html>

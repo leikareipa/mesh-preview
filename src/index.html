@@ -12,22 +12,41 @@
                 margin: 0;
                 padding: 0;
                 overflow: hidden;
+                font-family: sans-serif;
             }
 
-            #copyright-notice
+            #info-box
             {
+                user-select: none;
                 position: absolute;
-                bottom: 3%;
+                top: 3%;
                 left: 3%;
+                border: 1px solid lightgray;
+                border-radius: 6px;
+                height: 0;
+                display: flex;
+                padding: 25px;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+                white-space: nowrap;
+                transition: width 0.3s,
+                            box-shadow 0.2s;
             }
 
-            #copyright-notice a
+            #info-box.expanded
+            {
+                justify-content: left;
+                box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+            }
+
+            #info-box a
             {
                 text-decoration: none;
                 color: inherit;
             }
 
-            #copyright-notice a:hover
+            #info-box a:hover
             {
                 text-decoration: underline;
             }
@@ -41,15 +60,25 @@
 
             #control-panel-container
             {
+                user-select: none;
                 position: absolute;
                 top: 3%;
                 right: 3%;
                 z-index: 1;
-                padding: 20px;
+                padding: 25px;
                 border: 1px solid lightgray;
                 border-radius: 6px;
                 min-width: 270px;
                 background-color: rgba(255, 255, 255, 0.7);
+                cursor: grab;
+                transition: box-shadow 0.3s;
+            }
+
+            #control-panel-container:active
+            {
+                box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+                background-color: white;
+                cursor: grabbing;
             }
 
             .control-panel-field
@@ -67,7 +96,7 @@
             .control-panel-field input
             {
                 appearance: none;
-                padding: 8px;
+                padding: 10px;
                 margin-top: 8px;
                 border: 1px solid lightgray;
                 border-radius: 6px;
@@ -144,10 +173,27 @@
 
         </div>
 
-        <div id="copyright-notice">
+        <div id="info-box"
+             ref="info-box-container"
+             v-on:click="box_clicked"
+             v-bind:class="{expanded}">
 
-            Mesh viewer by
-            <a href="https://www.tarpeeksihyvaesoft.com" target="_blank">Tarpeeksi Hyvae Soft</a>.
+            <div v-if="!expanded"
+            ref="info-box-text"
+                 v-cloak>
+                ?
+            </div>
+
+            <div v-else
+                 ref="info-box-text"
+                 v-cloak>
+
+                &ldquo;Mesh viewer&rdquo; by
+                <a href="https://www.tarpeeksihyvaesoft.com" target="_blank">Tarpeeksi Hyvae Soft</a>.
+                
+                Mesh data from Ka-50 Hokum &copy; Virgin/Simis.
+
+            </div>
 
         </div>
 
@@ -157,6 +203,36 @@
             import {Luu} from "./luujanko.js";
             import {get_meshes_from_model_file} from "./parse-model-file.js";
             import models from "./models.js";
+
+            const infoBox = new Vue({
+                el: "#info-box",
+                data: {
+                    expanded: false,
+                },
+                methods: {
+                    box_clicked: function(event)
+                    {
+                        // Ignore clicks on links.
+                        if (event.target.closest("a"))
+                        {
+                            return true;
+                        }
+                        
+                        this.expanded = !this.expanded;
+                        Vue.nextTick(this.adjust_box_width);
+                    },
+
+                    adjust_box_width: function()
+                    {
+                        const contentTextWidth = (this.$refs["info-box-text"].clientWidth || 0);
+                        this.$refs["info-box-container"].style.width = `${contentTextWidth}px`;
+                    },
+                },
+                mounted()
+                {
+                    this.adjust_box_width();
+                },
+            });
 
             const ui = new Vue({
                 el: "#vue-ui",

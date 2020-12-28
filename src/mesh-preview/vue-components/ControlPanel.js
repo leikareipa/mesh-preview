@@ -5,6 +5,7 @@
  *
  */
 
+import Vue from "../vue.esm.browser.min.js";
 import {make_element_draggable} from "../make-draggable.js";
 
 export default Vue.component("control-panel", {

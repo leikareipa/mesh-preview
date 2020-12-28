@@ -5,9 +5,13 @@
  *
  */
 
+import Vue from "./vue.esm.browser.min.js";
+import Vuex from "./vuex.esm.browser.min.js";
+
 import InfoBox from "./vue-components/InfoBox.js";
 import Rendering from "./vue-components/Rendering.js";
 import ControlPanel from "./vue-components/ControlPanel.js";
+
 import {Luu} from "./luujanko.js";
 
 export function start_mesh_preview(args = {})

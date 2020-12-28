@@ -5,6 +5,8 @@
  *
  */
 
+import Vue from "../vue.esm.browser.min.js";
+
 export default Vue.component("rendering", {
     template: `
     <div id="luujanko-rendering-container">

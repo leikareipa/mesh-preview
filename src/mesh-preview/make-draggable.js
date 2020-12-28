@@ -1,7 +1,7 @@
 /*
  * 2020 Tarpeeksi Hyvae Soft
  *
- * Software: Mesh viewer
+ * Software: Mesh preview
  * 
  */
 
@@ -9,6 +9,8 @@
 
 // Enables dragging the given element via mouse. Note: The element must have a child of
 // the "dragger" class - this is the sub-element that accepts mouse input for dragging.
+//
+// Will append "dragging" to the element's class list while the element is being dragged.
 export function make_element_draggable(targetElement)
 {
     const draggerElement = targetElement.querySelector(".dragger");
@@ -28,6 +30,7 @@ export function make_element_draggable(targetElement)
             y: 0,
         },
         isDragging: false,
+        isInitialized: false,
     };
 
     draggerElement.addEventListener("mousedown", function(event)
@@ -52,7 +55,7 @@ export function make_element_draggable(targetElement)
         {
             return;
         }
-        
+
         dragStatus.isDragging = false;
         targetElement.classList.remove("dragging");
 
@@ -63,7 +66,7 @@ export function make_element_draggable(targetElement)
     {
         if (dragStatus.isDragging)
         {
-            if (!targetElement.draggingInitialized)
+            if (!dragStatus.isInitialized)
             {
                 initialize_dragging();
             }
@@ -100,7 +103,7 @@ export function make_element_draggable(targetElement)
         targetElement.style.right = "";
         targetElement.style.bottom = "";
 
-        targetElement.draggingInitialized = true;
+        dragStatus.isInitialized = true;
 
         return;
     }

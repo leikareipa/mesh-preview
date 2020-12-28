@@ -1,0 +1,116 @@
+body
+{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: sans-serif;
+}
+
+.info-box
+{
+    user-select: none;
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    border: 1px solid lightgray;
+    border-radius: 6px;
+    height: 0;
+    display: flex;
+    padding: 28px;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: white;
+    white-space: nowrap;
+    transition: width 0.3s;
+}
+
+.info-box.expanded
+{
+    justify-content: left;
+}
+
+.info-box a
+{
+    text-decoration: none;
+    color: inherit;
+}
+
+.info-box a:hover
+{
+    text-decoration: underline;
+}
+
+#luujanko-rendering-container
+{
+    position: relative;
+    top: 0;
+    z-index: 0;
+}
+
+#control-panel
+{
+    user-select: none;
+    position: absolute;
+    top: 3%;
+    right: 3%;
+    z-index: 1;
+    padding: 20px;
+    border: 1px solid lightgray;
+    border-radius: 6px;
+    width: 245px;
+    background-color: white;
+    overflow: hidden;
+}
+
+#control-panel > .dragger
+{
+    height: 42px;
+    width: 100%;
+    cursor: grab;
+    background-color: lightgray;
+    margin-bottom: 10px;
+    border-radius: 6px;
+
+    /* Image source: https://stackoverflow.com/a/17893379. */
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi2r9//38gYGAEESAAEGAAasgJOgzOKCoAAAAASUVORK5CYII=);
+}
+
+#control-panel.dragging > .dragger
+{
+    cursor: grabbing;
+}
+
+.control-panel-field
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.control-panel-field + .control-panel-field
+{
+    margin-top: 10px;
+}
+
+.control-panel-field select,
+.control-panel-field input
+{
+    appearance: none;
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid lightgray;
+    border-radius: 6px;
+    background-color: white;
+}
+
+.control-panel-field.disabled *
+{
+    color: lightgray;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+[v-cloak]
+{
+    display: none;
+}

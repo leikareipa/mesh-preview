@@ -8,11 +8,12 @@
 "use strict";
 
 // Expects the name of a Ka-50 Hokum model file (from the game's "DG" folder). Loads the file's
-// data and parses it to return the model's polygon data in an array where each element is one
-// mesh and there are as many elements as there are meshes in the file.
-export async function get_meshes_from_model_file(modelFileName)
+// data and parses it to return the model's polygon data.
+export async function get_meshes_from_model_file(model)
 {
-    const fileContents = await fetch(`./model-files/${modelFileName}`)
+    const modelFileName = model.name;
+
+    const fileContents = await fetch(`../model-files/${modelFileName}`)
                                .then(response=>response.text());
 
     const lines = fileContents.split("\n").filter(line=>line.length);
@@ -20,10 +21,10 @@ export async function get_meshes_from_model_file(modelFileName)
     // Remove the first line, since it appears to be just a file version number or something like that.
     lines.shift();
 
-    // The loaded model goes into this. Each element is a successively
-    // LOD-reduced version of the previous element, with the first element
-    // giving the full non-reduced model's polygons.
-    const model = [];
+    // The model's meshes go into this. Each element is a successively LOD-reduced
+    // version of the previous element, with the first element giving the full non-
+    // reduced model's polygons.
+    const meshes = [];
 
     while (lines.length)
     {
@@ -31,7 +32,7 @@ export async function get_meshes_from_model_file(modelFileName)
 
         if (nextLine.match(/Shapes [0-9]+/))
         {
-            model.push(...parse_block_shapes(lines));
+            meshes.push(...parse_block_shapes(lines));
         }
         else if (nextLine.match(/Nodes [0-9]+/))
         {
@@ -44,7 +45,7 @@ export async function get_meshes_from_model_file(modelFileName)
         }
     }
 
-    return model;
+    return meshes[0];
 }
 
 function parse_block_nodes(lines)

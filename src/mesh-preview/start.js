@@ -12,12 +12,24 @@ import {Luu} from "./luujanko.js";
 
 export function start_mesh_preview(args = {})
 {
+    // Create the app's DOM tree.
+    {
+        const containerElement = document.createElement("div");
+
+        containerElement.setAttribute("id", (args.containerId || "mesh-preview"));
+        containerElement.appendChild(document.createElement("mesh-preview-rendering"));
+        containerElement.appendChild(document.createElement("mesh-preview-control-panel"));
+        containerElement.appendChild(document.createElement("mesh-preview-info-box"));
+
+        document.body.appendChild(containerElement);
+    }
+
     Vue.use(Vuex);
 
     const meshPreviewStore = new Vuex.Store({
         state: {
             startupArgs: args,
-            knownMeshes: args.meshes,
+            knownMeshes: args.meshesMetadata,
             activeMeshIdx: 0,
             activeMeshNgons: [],
             viewDistance: args.defaultViewDistance,

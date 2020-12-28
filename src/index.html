@@ -19,25 +19,24 @@
             {
                 user-select: none;
                 position: absolute;
-                top: 3%;
-                left: 3%;
+                bottom: 20px;
+                left: 20px;
                 border: 1px solid lightgray;
                 border-radius: 6px;
                 height: 0;
                 display: flex;
-                padding: 25px;
+                padding: 28px;
                 justify-content: center;
                 align-items: center;
                 overflow: hidden;
+                background-color: white;
                 white-space: nowrap;
-                transition: width 0.3s,
-                            box-shadow 0.2s;
+                transition: width 0.3s;
             }
 
             #info-box.expanded
             {
                 justify-content: left;
-                box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
             }
 
             #info-box a
@@ -68,16 +67,23 @@
                 padding: 25px;
                 border: 1px solid lightgray;
                 border-radius: 6px;
-                min-width: 270px;
-                background-color: rgba(255, 255, 255, 0.7);
-                cursor: grab;
-                transition: box-shadow 0.3s;
+                width: 270px;
+                background-color: white;
+                overflow: hidden;
             }
 
-            #control-panel-container:active
+            #control-panel-container > .dragger
             {
-                box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
-                background-color: white;
+                height: 40px;
+                width: 100%;
+                cursor: grab;
+                background-color: lightgray;
+                margin-bottom: 10px;
+                border-radius: 6px;
+            }
+
+            #control-panel-container.dragging > .dragger
+            {
                 cursor: grabbing;
             }
 
@@ -122,7 +128,10 @@
 
             <div id="control-panel-container">
 
-                 <div class="control-panel-field">
+                <div class="dragger">
+                </div>
+
+                <div class="control-panel-field">
 
                     <span>Model file</span>
 
@@ -202,7 +211,8 @@
         <script type="module">
             import {Luu} from "./luujanko.js";
             import {get_meshes_from_model_file} from "./parse-model-file.js";
-            import models from "./models.js";
+            import {make_element_draggable} from "./make-element-draggable.js";
+            import models from "./models.js";  
 
             const infoBox = new Vue({
                 el: "#info-box",
@@ -288,13 +298,20 @@
                         }
                     },
                 },
-                // Start the renderer. It'll keep running and rendering whatever polygons the
-                // UI gives it.
+                mounted()
+                {
+                    // Note: make_draggable() needs to know the target element's initial size,
+                    // so it shouldn't be called until the element has been initialized - which
+                    // is why we call it in this hook.
+                    make_element_draggable(document.getElementById("control-panel-container"));
+                },
                 created()
                 {
                     const uiState = this;
                     const rotationVector = Luu.rotation(0.5, 0, 0);
 
+                    // Start the renderer. It'll keep running and rendering whatever polygons the
+                    // UI gives it.
                     (function render_loop(timestamp = 0, frameTimeDeltaMs = 0, frameCount = 0)
                     {
                         // Have the SVG fill the entire viewport.

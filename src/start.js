@@ -20,10 +20,11 @@ export function start_mesh_preview(args = {})
         ...{
             infoText: "",
             modulePath: "./",
-            get_mesh: ()=>{},
+            get_mesh: async ()=>{},
             meshesMetadata: [],
             containerId: "mesh-preview",
             defaultRotation: [0.5, 0, 0],
+            rotationDelta: [0, 0.0006, 0],
             defaultViewDistance: 40000,
         },
         ...args,
@@ -113,7 +114,9 @@ export function start_mesh_preview(args = {})
                     svgImage.setAttribute("height", document.documentElement.clientHeight);
 
                     // Automatically rotate the model.
-                    rotationVector.y += (0.0006 * frameTimeDeltaMs);
+                    rotationVector.x += (uiStore.state.startupArgs.rotationDelta[0] * frameTimeDeltaMs);
+                    rotationVector.y += (uiStore.state.startupArgs.rotationDelta[1] * frameTimeDeltaMs);
+                    rotationVector.z += (uiStore.state.startupArgs.rotationDelta[2] * frameTimeDeltaMs);
 
                     const ngons = (uiStore.state.activeMeshNgons || []);
                     const viewDistance = (uiStore.state.viewDistance || uiStore.state.startupArgs.defaultViewDistance);

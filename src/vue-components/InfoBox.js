@@ -56,7 +56,7 @@ export default Vue.component("info-box", {
         <div v-else
              ref="info-box-text">
 
-            Mesh preview &copy;
+            &ldquo;Mesh preview&rdquo; by
             <a href="https://www.tarpeeksihyvaesoft.com" target="_blank">Tarpeeksi Hyvae Soft</a>.
 
             <span v-html="infoText"></span>

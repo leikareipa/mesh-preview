@@ -53,11 +53,11 @@ export default Vue.component("control-panel", {
 
             <select v-model="activeMeshIdx">
 
-                <option v-for="(model, idx) in this.$store.state.knownMeshes"
+                <option v-for="(mesh, idx) in this.$store.state.knownMeshes"
                         v-bind:value="idx"
-                        v-bind:key="model.name">
+                        v-bind:key="mesh.name">
 
-                    {{model.name}}
+                    {{mesh.name}}
 
                 </option>
 
@@ -76,6 +76,14 @@ export default Vue.component("control-panel", {
             <input type="number"
                    step="any"
                    v-model="viewDistance">
+
+        </div>
+
+        <hr>
+
+        <div style="width: 100%; text-align: center;">
+
+            Polygons: {{this.$store.state.activeMeshNgons.length? this.$store.state.activeMeshNgons.length : "&ndash;"}}
 
         </div>
 

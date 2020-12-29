@@ -83,6 +83,14 @@ body
     cursor: grabbing;
 }
 
+#control-panel hr
+{
+    margin-top: 27px;
+    margin-bottom: 5px;
+    border: none;
+    border-bottom: 1px solid lightgray;
+}
+
 .control-panel-field
 {
     display: flex;

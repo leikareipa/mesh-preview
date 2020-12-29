@@ -18,8 +18,13 @@ export function start_mesh_preview(args = {})
 {
     args = {
         ...{
+            infoText: "",
+            get_mesh: ()=>{},
+            meshesMetadata: [],
             cssFileName: "mesh-preview.css",
             containerId: "mesh-preview",
+            defaultRotation: [0.5, 0, 0],
+            defaultViewDistance: 40000,
         },
         ...args,
     };
@@ -60,7 +65,7 @@ export function start_mesh_preview(args = {})
                 {
                     const meshMetadata = state.knownMeshes[state.activeMeshIdx];
                     const meshData = await args.get_mesh(meshMetadata);
-                    const luujankoMesh = meshData.map(face=>Luu.ngon(face.vertices.map(v=>Luu.vertex(v.x, v.y, v.z))));
+                    const luujankoMesh = meshData.map(face=>Luu.ngon(face.map(v=>Luu.vertex(v.x, v.y, v.z))));
 
                     state.activeMeshNgons = luujankoMesh;
                     state.viewDistance = (meshMetadata.viewDistance || state.startupArgs.defaultViewDistance || 40000);
@@ -91,7 +96,7 @@ export function start_mesh_preview(args = {})
         created()
         {
             const uiStore = this.$store;
-            const rotationVector = Luu.rotation(0.5, 0, 0);
+            const rotationVector = Luu.rotation(...uiStore.state.startupArgs.defaultRotation);
 
             uiStore.commit("set_mesh_idx", 0);
 

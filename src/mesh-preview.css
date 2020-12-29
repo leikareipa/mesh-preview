@@ -65,7 +65,7 @@ body
 
 #control-panel > .dragger
 {
-    height: 42px;
+    height: 38px;
     width: 100%;
     cursor: grab;
     background-color: lightgray;
@@ -101,6 +101,17 @@ body
     border: 1px solid lightgray;
     border-radius: 6px;
     background-color: white;
+}
+
+.control-panel-field input[type="number"]::-webkit-outer-spin-button,
+.control-panel-field input[type="number"]::-webkit-inner-spin-button
+{
+    display: none;
+}
+
+.control-panel-field input[type="number"]
+{
+    -moz-appearance: textfield;
 }
 
 .control-panel-field.disabled *

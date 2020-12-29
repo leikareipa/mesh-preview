@@ -31,7 +31,11 @@ export default Vue.component("info-box", {
         adjust_box_width: function()
         {
             const contentTextWidth = (this.$refs["info-box-text"].clientWidth || 0);
-            this.$refs["info-box-container"].style.width = `${contentTextWidth}px`;
+
+            // Note: We set the width to 0 when not expanded to work around a bug where
+            // the initial element width gets reported too large (~1400 px) when the CSS
+            // file is embedded via JS instead of in the HTML.
+            this.$refs["info-box-container"].style.width = `${this.expanded? contentTextWidth : 0}px`;
         },
     },
     mounted()

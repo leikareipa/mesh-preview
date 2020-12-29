@@ -16,15 +16,27 @@ import {Luu} from "./luujanko.js";
 
 export function start_mesh_preview(args = {})
 {
+    args = {
+        ...{
+            cssFileName: "mesh-preview.css",
+            containerId: "mesh-preview",
+        },
+        ...args,
+    };
+
     // Create the app's DOM tree.
     {
+        const cssLink = document.createElement("link");
+        cssLink.setAttribute("rel", "stylesheet");
+        cssLink.setAttribute("type", "text/css");
+        cssLink.setAttribute("href", args.cssFileName);
+        document.head.appendChild(cssLink);
+        
         const containerElement = document.createElement("div");
-
-        containerElement.setAttribute("id", (args.containerId || "mesh-preview"));
+        containerElement.setAttribute("id", args.containerId);
         containerElement.appendChild(document.createElement("mesh-preview-rendering"));
         containerElement.appendChild(document.createElement("mesh-preview-control-panel"));
         containerElement.appendChild(document.createElement("mesh-preview-info-box"));
-
         document.body.appendChild(containerElement);
     }
 

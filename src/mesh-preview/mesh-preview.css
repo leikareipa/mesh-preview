@@ -10,13 +10,13 @@ body
 {
     user-select: none;
     position: absolute;
-    bottom: 30px;
-    left: 30px;
+    bottom: 40px;
+    left: 40px;
     border: 1px solid lightgray;
-    border-radius: 6px;
+    border-radius: 60px;
     height: 0;
     display: flex;
-    padding: 28px;
+    padding: 30px;
     justify-content: center;
     align-items: center;
     overflow: hidden;

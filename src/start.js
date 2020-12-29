@@ -19,9 +19,9 @@ export function start_mesh_preview(args = {})
     args = {
         ...{
             infoText: "",
+            modulePath: "./",
             get_mesh: ()=>{},
             meshesMetadata: [],
-            cssFileName: "mesh-preview.css",
             containerId: "mesh-preview",
             defaultRotation: [0.5, 0, 0],
             defaultViewDistance: 40000,
@@ -34,7 +34,7 @@ export function start_mesh_preview(args = {})
         const cssLink = document.createElement("link");
         cssLink.setAttribute("rel", "stylesheet");
         cssLink.setAttribute("type", "text/css");
-        cssLink.setAttribute("href", args.cssFileName);
+        cssLink.setAttribute("href", `${args.modulePath}mesh-preview.css`);
         document.head.appendChild(cssLink);
         
         const containerElement = document.createElement("div");

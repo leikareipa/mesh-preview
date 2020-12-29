@@ -74,6 +74,7 @@ export default Vue.component("control-panel", {
             </span>
 
             <input type="number"
+                   step="any"
                    v-model="viewDistance">
 
         </div>

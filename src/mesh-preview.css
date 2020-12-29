@@ -16,7 +16,7 @@ body
     border-radius: 60px;
     height: 0;
     display: flex;
-    padding: 30px;
+    padding: 29px;
     justify-content: center;
     align-items: center;
     overflow: hidden;
@@ -66,11 +66,13 @@ body
 #control-panel > .dragger
 {
     height: 38px;
-    width: 100%;
+    width: 25%;
     cursor: grab;
     background-color: lightgray;
-    margin-bottom: 10px;
+    margin-top: -10px;
+    margin-left: auto;
     border-radius: 6px;
+    transform: translateY(10px);
 
     /* Image source: https://stackoverflow.com/a/17893379. */
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi2r9//38gYGAEESAAEGAAasgJOgzOKCoAAAAASUVORK5CYII=);

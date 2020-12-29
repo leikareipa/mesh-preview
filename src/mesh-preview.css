@@ -13,7 +13,7 @@ body
     bottom: 40px;
     left: 40px;
     border: 1px solid lightgray;
-    border-radius: 60px;
+    border-radius: 3px;
     height: 0;
     display: flex;
     padding: 29px;
@@ -55,30 +55,48 @@ body
     top: 3%;
     right: 3%;
     z-index: 1;
-    padding: 20px;
     border: 1px solid lightgray;
-    border-radius: 6px;
-    width: 245px;
+    border-radius: 3px;
+    width: 285px;
     background-color: white;
     overflow: hidden;
 }
 
-#control-panel > .dragger
+#control-panel .section
 {
-    height: 38px;
-    width: 25%;
+    padding: 0 20px;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#control-panel .section.fields
+{
+    height: auto;
+    padding: 20px 20px;
+}
+
+#control-panel .section.dragger
+{
+    padding: 0;
+}
+
+#control-panel .section + .section
+{
+    border-top: 1px solid lightgray;
+}
+
+#control-panel .dragger
+{
     cursor: grab;
     background-color: lightgray;
-    margin-top: -10px;
-    margin-left: auto;
-    border-radius: 6px;
-    transform: translateY(10px);
 
     /* Image source: https://stackoverflow.com/a/17893379. */
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi2r9//38gYGAEESAAEGAAasgJOgzOKCoAAAAASUVORK5CYII=);
 }
 
-#control-panel.dragging > .dragger
+#control-panel.dragging .dragger
 {
     cursor: grabbing;
 }
@@ -91,19 +109,19 @@ body
     border-bottom: 1px solid lightgray;
 }
 
-.control-panel-field
+#control-panel .field
 {
     display: flex;
     flex-direction: column;
 }
 
-.control-panel-field + .control-panel-field
+#control-panel .field + .field
 {
     margin-top: 10px;
 }
 
-.control-panel-field select,
-.control-panel-field input
+#control-panel .field select,
+#control-panel .field input
 {
     appearance: none;
     padding: 10px;
@@ -114,18 +132,18 @@ body
     outline: none;
 }
 
-.control-panel-field input[type="number"]::-webkit-outer-spin-button,
-.control-panel-field input[type="number"]::-webkit-inner-spin-button
+#control-panel .field input[type="number"]::-webkit-outer-spin-button,
+#control-panel .field input[type="number"]::-webkit-inner-spin-button
 {
     display: none;
 }
 
-.control-panel-field input[type="number"]
+#control-panel .field input[type="number"]
 {
     -moz-appearance: textfield;
 }
 
-.control-panel-field.disabled *
+#control-panel .field.disabled *
 {
     color: lightgray;
     pointer-events: none;

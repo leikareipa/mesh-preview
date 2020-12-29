@@ -41,47 +41,50 @@ export default Vue.component("control-panel", {
     template: `
     <div id="control-panel">
 
-        <div class="dragger">
+        <div class="section dragger">
 
             <!-- This is used for mouse dragging; the dragger script attaches itself here. -->
-            
-        </div>
-
-        <div class="control-panel-field">
-
-            <span>Mesh</span>
-
-            <select v-model="activeMeshIdx">
-
-                <option v-for="(mesh, idx) in this.$store.state.knownMeshes"
-                        v-bind:value="idx"
-                        v-bind:key="mesh.name">
-
-                    {{mesh.name}}
-
-                </option>
-
-            </select>
-
-        </div>
-        
-        <div class="control-panel-field">
-
-            <span>
-            
-                View distance
-            
-            </span>
-
-            <input type="number"
-                   step="any"
-                   v-model="viewDistance">
 
         </div>
 
-        <hr>
+        <div class="section fields">
 
-        <div style="width: 100%; text-align: center;">
+            <div class="field">
+
+                <span>Mesh</span>
+
+                <select v-model="activeMeshIdx">
+
+                    <option v-for="(mesh, idx) in this.$store.state.knownMeshes"
+                            v-bind:value="idx"
+                            v-bind:key="mesh.name">
+
+                        {{mesh.name}}
+
+                    </option>
+
+                </select>
+
+            </div>
+            
+            <div class="field">
+
+                <span>
+                
+                    View distance
+                
+                </span>
+
+                <input type="number"
+                    step="any"
+                    v-model="viewDistance">
+
+            </div>
+
+        </div>
+
+        <div class="section label"
+             style="text-align: center;">
 
             Polygons: {{this.$store.state.activeMeshNgons.length? this.$store.state.activeMeshNgons.length : "&ndash;"}}
 

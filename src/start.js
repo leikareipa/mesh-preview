@@ -23,7 +23,7 @@ export function start_mesh_preview(args = {})
             get_mesh: async ()=>{},
             meshesMetadata: [],
             containerId: "mesh-preview",
-            defaultRotation: [0.5, 0, 0],
+            defaultOrientation: [0.5, 0, 0],
             rotationDelta: [0, 0.0006, 0],
             defaultViewDistance: 40000,
         },
@@ -97,7 +97,7 @@ export function start_mesh_preview(args = {})
         created()
         {
             const uiStore = this.$store;
-            const rotationVector = Luu.rotation(...uiStore.state.startupArgs.defaultRotation);
+            const rotationVector = Luu.rotation(...uiStore.state.startupArgs.defaultOrientation);
 
             uiStore.commit("set_mesh_idx", 0);
 

@@ -101,6 +101,7 @@ body
     border: 1px solid lightgray;
     border-radius: 6px;
     background-color: white;
+    outline: none;
 }
 
 .control-panel-field input[type="number"]::-webkit-outer-spin-button,

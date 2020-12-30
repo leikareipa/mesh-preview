@@ -19,7 +19,7 @@
             ];
 
             start_mesh_preview({
-                get_mesh,
+                get_mesh_data,
                 meshesMetadata,
                 modulePath: "../../src/",
                 defaultViewDistance: 25,
@@ -27,7 +27,7 @@
                 infoText: "Simple shapes sample by Tarpeeksi Hyvae Soft",
             });
 
-            function get_mesh(meshMetadata)
+            function get_mesh_data(meshMetadata)
             {
                 switch (meshMetadata.name)
                 {

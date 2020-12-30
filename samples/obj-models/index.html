@@ -19,7 +19,7 @@
             ];
 
             start_mesh_preview({
-                get_mesh,
+                get_mesh_data,
                 meshesMetadata,
                 modulePath: "../../src/",
                 defaultViewDistance: 3.2,
@@ -28,7 +28,7 @@
                 infoText: "OBJ sample by Tarpeeksi Hyvae Soft",
             });
 
-            async function get_mesh(meshMetadata)
+            async function get_mesh_data(meshMetadata)
             {
                 const mesh = await load_obj(`./models/${meshMetadata.name}.obj`,
                                             `./models/${meshMetadata.name}.mtl`);

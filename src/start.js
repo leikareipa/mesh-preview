@@ -20,7 +20,7 @@ export function start_mesh_preview(args = {})
         ...{// Default arguments.
             infoText: "",
             modulePath: "./",
-            get_mesh: async ()=>{},
+            get_mesh_data: async (meshMetadata)=>([]),
             meshesMetadata: [],
             containerId: "mesh-preview",
             defaultOrientation: [0.5, 0, 0],
@@ -54,7 +54,7 @@ export function start_mesh_preview(args = {})
                 try
                 {
                     const meshMetadata = state.knownMeshes[state.activeMeshIdx];
-                    const meshData = await args.get_mesh(meshMetadata);
+                    const meshData = await args.get_mesh_data(meshMetadata);
                     const luujankoMesh = meshData.map(face=>Luu.ngon(face.map(v=>Luu.vertex(v.x, v.y, v.z))));
 
                     state.activeMeshNgons = luujankoMesh;

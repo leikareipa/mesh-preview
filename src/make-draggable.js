@@ -21,6 +21,10 @@ export function make_element_draggable(targetElement)
     }
 
     const dragStatus = {
+        windowSize: {
+            x: 0,
+            y: 0,
+        },
         mousePosition: {
             x: 0,
             y: 0,
@@ -45,6 +49,25 @@ export function make_element_draggable(targetElement)
 
         dragStatus.isDragging = true;
         targetElement.classList.add("dragging");
+
+        return;
+    });
+
+    window.addEventListener("resize", function(event)
+    {
+        if (!dragStatus.isInitialized)
+        {
+            return;
+        }
+        
+        const deltaX = (document.body.clientWidth - dragStatus.windowSize.x);
+
+        dragStatus.windowSize.x = document.body.clientWidth;
+        dragStatus.windowSize.y = document.body.clientHeight;
+
+        dragStatus.dragPosition.x += deltaX;
+
+        update_element_position();
 
         return;
     });
@@ -74,8 +97,7 @@ export function make_element_draggable(targetElement)
             dragStatus.dragPosition.x += (event.clientX - dragStatus.mousePosition.x);
             dragStatus.dragPosition.y += (event.clientY - dragStatus.mousePosition.y);
 
-            targetElement.style.top = `${dragStatus.dragPosition.y}px`;
-            targetElement.style.left = `${dragStatus.dragPosition.x}px`;
+            update_element_position();
         }
 
         dragStatus.mousePosition.x = event.clientX;
@@ -83,6 +105,14 @@ export function make_element_draggable(targetElement)
 
         return;
     });
+
+    function update_element_position()
+    {
+        targetElement.style.top = `${dragStatus.dragPosition.y}px`;
+        targetElement.style.left = `${dragStatus.dragPosition.x}px`;
+
+        return;
+    }
 
     function initialize_dragging()
     {
@@ -99,6 +129,9 @@ export function make_element_draggable(targetElement)
 
         dragStatus.dragPosition.x = (targetElement.style.left? left : (document.body.clientWidth - right - targetElement.getBoundingClientRect().width));
         dragStatus.dragPosition.y = (targetElement.style.top? top : (document.body.clientHeight - bottom - targetElement.getBoundingClientRect().height));
+
+        dragStatus.windowSize.x = document.body.clientWidth;
+        dragStatus.windowSize.y = document.body.clientHeight;
 
         targetElement.style.right = "";
         targetElement.style.bottom = "";

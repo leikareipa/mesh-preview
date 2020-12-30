@@ -17,7 +17,7 @@ import {Luu} from "./luujanko.js";
 export function start_mesh_preview(args = {})
 {
     args = {
-        ...{
+        ...{// Default arguments.
             infoText: "",
             modulePath: "./",
             get_mesh: async ()=>{},
@@ -30,21 +30,10 @@ export function start_mesh_preview(args = {})
         ...args,
     };
 
-    // Create the app's DOM tree.
-    {
-        const cssLink = document.createElement("link");
-        cssLink.setAttribute("rel", "stylesheet");
-        cssLink.setAttribute("type", "text/css");
-        cssLink.setAttribute("href", `${args.modulePath}mesh-preview.css`);
-        document.head.appendChild(cssLink);
-        
-        const containerElement = document.createElement("div");
-        containerElement.setAttribute("id", args.containerId);
-        containerElement.appendChild(document.createElement("mesh-preview-rendering"));
-        containerElement.appendChild(document.createElement("mesh-preview-control-panel"));
-        containerElement.appendChild(document.createElement("mesh-preview-info-box"));
-        document.body.appendChild(containerElement);
-    }
+    // Create the app's container DOM element.
+    const containerElement = document.createElement("div");
+    containerElement.setAttribute("id", args.containerId);
+    document.body.appendChild(containerElement);
 
     Vue.use(Vuex);
 
@@ -84,7 +73,7 @@ export function start_mesh_preview(args = {})
         }
     });
 
-    const meshPreview = new Vue({
+    const app = new Vue({
         el: `#${args.containerId}`,
         store: meshPreviewStore,
         data: {
@@ -139,7 +128,22 @@ export function start_mesh_preview(args = {})
                                 (frameCount + 1));
                 });
             })();
-        }
+        },
+        template: `
+        <div>
+
+            <link rel="stylesheet"
+                  type="text/css"
+                  href="${args.modulePath}/mesh-preview.css">
+
+            <mesh-preview-rendering></mesh-preview-rendering>
+
+            <mesh-preview-control-panel></mesh-preview-control-panel>
+
+            <mesh-preview-info-box></mesh-preview-info-box>
+            
+        </div>
+        `,
     });
 
     return;

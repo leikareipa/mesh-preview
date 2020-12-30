@@ -121,8 +121,7 @@ export default Vue.component("control-panel", {
 
             </div>
             
-            <div class="field"
-                 v-bind:class="{disabled: loading}">
+            <div class="field">
 
                 <span>
                 

@@ -13,7 +13,7 @@ body
     position: absolute;
     bottom: 40px;
     left: 40px;
-    border: 1px solid gray;
+    border: 1px solid lightgray;
     border-radius: 3px;
     height: 0;
     display: flex;
@@ -57,12 +57,13 @@ body
     top: 3%;
     right: 3%;
     z-index: 1;
-    border: 1px solid gray;
+    border: 1px solid lightgray;
     border-radius: 3px;
     width: 285px;
     background-color: white;
     overflow: hidden;
     box-shadow: white 0px 0px 0px 6px;
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.2));
 }
 
 #control-panel .section
@@ -177,11 +178,11 @@ body
 }
 .flip-enter
 {
-    transform: rotateY(-90deg);
+    transform: rotateX(-90deg);
 }
 .flip-leave-to 
 {
-    transform: rotateY(90deg);
+    transform: rotateX(90deg);
 }
 
 .drop-enter-active,

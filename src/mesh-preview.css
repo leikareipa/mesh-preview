@@ -16,13 +16,13 @@ body
     border-radius: 3px;
     height: 0;
     display: flex;
-    padding: 29px;
+    padding: 28px;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     background-color: white;
     white-space: nowrap;
-    transition: width 0.3s;
+    transition: width 0.4s;
 }
 
 .info-box.expanded
@@ -71,6 +71,15 @@ body
     justify-content: center;
 }
 
+#control-panel .section.polycount
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
 #control-panel .section.fields
 {
     height: auto;
@@ -80,6 +89,7 @@ body
 #control-panel .section.dragger
 {
     padding: 0;
+    height: 40px;
 }
 
 #control-panel .section + .section
@@ -153,4 +163,22 @@ body
 [v-cloak]
 {
     display: none;
+}
+
+/* Vue transitions. */
+.flip-enter-active,
+.flip-leave-active
+{
+    transition: transform .25s,
+                opacity .25s;
+}
+.flip-enter
+{
+    transform: rotateX(-90deg);
+    opacity: 1;
+}
+.flip-leave-to 
+{
+    transform: rotateX(90deg);
+    opacity: 0;
 }

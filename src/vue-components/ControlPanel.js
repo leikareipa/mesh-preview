@@ -16,6 +16,19 @@ export default Vue.component("control-panel", {
         // is why we call it in this hook.
         make_element_draggable(document.getElementById("control-panel"));
     },
+    data: function()
+    {
+        return {
+            // When the user asks us to load a mesh, its index will be placed here
+            // until the mesh finishes loading; at which point this will be set to
+            // false. Note that the index value starts counting from 1 (0 isn't used).
+            loading: false,
+
+            // Used to store the return value of setInterval() while polling for the
+            // mesh-loading status.
+            loadingWaiter: undefined,
+        };
+    },
     computed: {
         viewDistance: {
             get()
@@ -34,7 +47,47 @@ export default Vue.component("control-panel", {
             },
             set(value)
             {
+                // Don't allow another mesh to be selected until we've finished
+                // loading the previous selection.
+                if (this.loading)
+                {
+                    this.$refs["mesh-selector"].value = (this.loading - 1);
+                    return;
+                }
+
                 this.$store.commit("set_mesh_idx", value);
+            }
+        },
+        ngons: function()
+        {
+            return this.$store.state.activeMeshNgons;
+        },
+    },
+    watch: {
+        activeMeshIdx: function(idx)
+        {
+            // Indicate that we've begun loading a mesh, and wait in the background
+            // until the loading is complete, after which we clear the loading flag.
+            // This is done to ensure that any transitions tied to setting the loading
+            // flag have time to finish before the flag-clearing transition starts.
+            if (!this.loading)
+            {
+                const transitionTime = 250;
+
+                this.loading = (idx + 1);
+                this.loadingWaiter = clearInterval(this.loadingWaiter);
+
+                setTimeout(()=>
+                {
+                    this.loadingWaiter = setInterval(()=>
+                    {
+                        if (this.ngons.length)
+                        {
+                            this.loading = false;
+                            this.loadingWaiter = clearInterval(this.loadingWaiter);
+                        }
+                    }, 1);
+                }, transitionTime);
             }
         },
     },
@@ -53,7 +106,8 @@ export default Vue.component("control-panel", {
 
                 <span>Mesh</span>
 
-                <select v-model="activeMeshIdx">
+                <select v-model="activeMeshIdx"
+                        ref="mesh-selector">
 
                     <option v-for="(mesh, idx) in this.$store.state.knownMeshes"
                             v-bind:value="idx"
@@ -67,7 +121,8 @@ export default Vue.component("control-panel", {
 
             </div>
             
-            <div class="field">
+            <div class="field"
+                 v-bind:class="{disabled: loading}">
 
                 <span>
                 
@@ -76,17 +131,31 @@ export default Vue.component("control-panel", {
                 </span>
 
                 <input type="number"
-                    step="any"
-                    v-model="viewDistance">
+                       step="any"
+                       v-model="viewDistance">
 
             </div>
 
         </div>
 
-        <div class="section label"
-             style="text-align: center;">
+        <div class="section polycount">
 
-            Polygons: {{this.$store.state.activeMeshNgons.length? this.$store.state.activeMeshNgons.length : "&ndash;"}}
+            <div style="margin-right: auto;">
+
+                Polycount:
+
+            </div>
+
+            <transition name="flip">
+
+                <div v-if="!loading"
+                     style="margin-left: auto;">
+
+                    {{ngons.length? ngons.length : ""}}
+
+                </div>
+
+            </transition>
 
         </div>
 

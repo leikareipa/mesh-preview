@@ -52,7 +52,7 @@ export function start_mesh_preview(args = {})
         state: {
             startupArgs: args,
             knownMeshes: args.meshesMetadata,
-            activeMeshIdx: 0,
+            activeMeshIdx: -1,
             activeMeshNgons: [],
             viewDistance: args.defaultViewDistance,
         },
@@ -94,7 +94,7 @@ export function start_mesh_preview(args = {})
             "mesh-preview-control-panel": ControlPanel,
             "mesh-preview-rendering": Rendering,
         },
-        created()
+        mounted()
         {
             const uiStore = this.$store;
             const rotationVector = Luu.rotation(...uiStore.state.startupArgs.defaultOrientation);
@@ -107,33 +107,30 @@ export function start_mesh_preview(args = {})
             {
                 const svgImage = document.getElementById("luujanko-rendering");
 
-                if (svgImage)
-                {
-                    // Have the SVG fill the entire viewport.
-                    svgImage.setAttribute("width", document.documentElement.clientWidth);
-                    svgImage.setAttribute("height", document.documentElement.clientHeight);
+                // Have the SVG fill the entire viewport.
+                svgImage.setAttribute("width", document.documentElement.clientWidth);
+                svgImage.setAttribute("height", document.documentElement.clientHeight);
 
-                    // Automatically rotate the model.
-                    rotationVector.x += (uiStore.state.startupArgs.rotationDelta[0] * frameTimeDeltaMs);
-                    rotationVector.y += (uiStore.state.startupArgs.rotationDelta[1] * frameTimeDeltaMs);
-                    rotationVector.z += (uiStore.state.startupArgs.rotationDelta[2] * frameTimeDeltaMs);
+                // Automatically rotate the model.
+                rotationVector.x += (uiStore.state.startupArgs.rotationDelta[0] * frameTimeDeltaMs);
+                rotationVector.y += (uiStore.state.startupArgs.rotationDelta[1] * frameTimeDeltaMs);
+                rotationVector.z += (uiStore.state.startupArgs.rotationDelta[2] * frameTimeDeltaMs);
 
-                    const ngons = (uiStore.state.activeMeshNgons || []);
-                    const viewDistance = (uiStore.state.viewDistance || uiStore.state.startupArgs.defaultViewDistance);
+                const ngons = (uiStore.state.activeMeshNgons || []);
+                const viewDistance = (uiStore.state.viewDistance || uiStore.state.startupArgs.defaultViewDistance);
 
-                    const scene = Luu.mesh(ngons, {
-                        rotation: rotationVector,
-                    });
+                const scene = Luu.mesh(ngons, {
+                    rotation: rotationVector,
+                });
 
-                    const options = {
-                        fov: 70,
-                        farPlane: 100000000,
-                        viewRotation: Luu.rotation(0, 0, 0),
-                        viewPosition: Luu.translation(0, 0, -viewDistance),
-                    };
+                const options = {
+                    fov: 70,
+                    farPlane: 100000000,
+                    viewRotation: Luu.rotation(0, 0, 0),
+                    viewPosition: Luu.translation(0, 0, -viewDistance),
+                };
 
-                    Luu.render([scene], svgImage, options);
-                }
+                Luu.render([scene], svgImage, options);
 
                 window.requestAnimationFrame((newTimestamp)=>
                 {

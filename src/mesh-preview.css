@@ -4,6 +4,7 @@ body
     padding: 0;
     overflow: hidden;
     font-family: sans-serif;
+    background-color: rgb(245, 245, 245);
 }
 
 .info-box
@@ -12,7 +13,7 @@ body
     position: absolute;
     bottom: 40px;
     left: 40px;
-    border: 1px solid lightgray;
+    border: 1px solid gray;
     border-radius: 3px;
     height: 0;
     display: flex;
@@ -22,7 +23,8 @@ body
     overflow: hidden;
     background-color: white;
     white-space: nowrap;
-    transition: width 0.4s;
+    transition: width 0.25s;
+    box-shadow: white 0px 0px 0px 6px;
 }
 
 .info-box.expanded
@@ -55,11 +57,12 @@ body
     top: 3%;
     right: 3%;
     z-index: 1;
-    border: 1px solid lightgray;
+    border: 1px solid gray;
     border-radius: 3px;
     width: 285px;
     background-color: white;
     overflow: hidden;
+    box-shadow: white 0px 0px 0px 6px;
 }
 
 #control-panel .section
@@ -89,7 +92,7 @@ body
 #control-panel .section.dragger
 {
     padding: 0;
-    height: 40px;
+    height: 45px;
 }
 
 #control-panel .section + .section
@@ -169,16 +172,30 @@ body
 .flip-enter-active,
 .flip-leave-active
 {
-    transition: transform .25s,
-                opacity .25s;
+    transition: transform 0.25s,
+                opacity 0.25s;
 }
 .flip-enter
 {
-    transform: rotateX(-90deg);
-    opacity: 1;
+    transform: rotateY(-90deg);
 }
 .flip-leave-to 
 {
-    transform: rotateX(90deg);
-    opacity: 0;
+    transform: rotateY(90deg);
+}
+
+.drop-enter-active,
+.drop-leave-active
+{
+    transition: transform 0.25s;
+}
+.drop-enter
+{
+    transform: translateY(-40px);
+}
+.drop-leave-to 
+{
+    transform: translateY(40px);
+    filter: blur(1px);
+    color: lightgray;
 }

@@ -146,7 +146,7 @@ export default Vue.component("control-panel", {
 
             </div>
 
-            <transition name="flip">
+            <transition name="drop">
 
                 <div v-if="!loading"
                      style="margin-left: auto;">

@@ -73,6 +73,14 @@ body
     overflow: hidden;
     box-shadow: white 0px 0px 0px 6px;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.2));
+    transition: none;
+}
+
+#control-panel.drag-auto
+{
+    transition-timing-function: ease-out;
+    transition: top 0.175s,
+                left 0.175s;
 }
 
 #control-panel .section

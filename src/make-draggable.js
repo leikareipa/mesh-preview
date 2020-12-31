@@ -7,10 +7,16 @@
 
 "use strict";
 
-// Enables dragging the given element via mouse. Note: The element must have a child of
-// the "dragger" class - this is the sub-element that accepts mouse input for dragging.
+// Enables dragging the given element via mouse.
 //
-// Will append "dragging" to the element's class list while the element is being dragged.
+// Will append "dragging" to the element's class list while the element is being dragged
+// by the user.
+//
+// NOTE: The element must have a child of the "dragger" class. This child is the recipient
+// of mouse input for dragging.
+//
+// NOTE: Assumes that the draggable surface spans the entire window.
+//
 export function make_element_draggable(targetElement)
 {
     const draggerElement = targetElement.querySelector(".dragger");
@@ -83,8 +89,7 @@ export function make_element_draggable(targetElement)
             dragStatus.isDragging = false;
             targetElement.classList.remove("dragging");
 
-            clip_element_to_edges();
-            update_element_position();
+            update_element_position(clip_element_to_edges());
         }
 
         return;
@@ -111,24 +116,49 @@ export function make_element_draggable(targetElement)
         return;
     });
 
+    // If the dragged element's position is partially or fully outside of the screen's
+    // edges, move it so that it's fully inside. Returns true if we moved the position,
+    // false otherwise (i.e. when the element is already fully inside the screen).
     function clip_element_to_edges()
     {
-        const marginLeft = 6;
-        const marginRight = 6;
-        const marginTop = 6;
-        const marginBottom = 6;
+        const marginLeft = 7;
+        const marginRight = 7;
+        const marginTop = 7;
+        const marginBottom = 7;
 
         const maxX = (document.body.clientWidth - draggerElement.clientWidth - marginRight);
         const maxY = (document.body.clientHeight - draggerElement.clientHeight - marginBottom);
 
-        dragStatus.dragPosition.x = Math.max(marginLeft, Math.min(maxX, dragStatus.dragPosition.x));
-        dragStatus.dragPosition.y = Math.max(marginTop, Math.min(maxY, dragStatus.dragPosition.y));
+        const clippedPosition = {
+            x: Math.max(marginLeft, Math.min(maxX, dragStatus.dragPosition.x)),
+            y: Math.max(marginTop, Math.min(maxY, dragStatus.dragPosition.y)),
+        };
 
-        return;
+        // If the element isn't fully inside the screen.
+        if ((dragStatus.dragPosition.x != clippedPosition.x) ||
+            (dragStatus.dragPosition.y != clippedPosition.y))
+        {
+            dragStatus.dragPosition.x = clippedPosition.x;
+            dragStatus.dragPosition.y = clippedPosition.y;
+
+            return true;
+        }
+
+        return false;
     }
 
-    function update_element_position()
+    function update_element_position(automaticMove = false)
     {
+        if (automaticMove)
+        {
+            targetElement.animate([
+                {left: targetElement.style.left,
+                 top: targetElement.style.top},
+                {left: `${dragStatus.dragPosition.x}px`,
+                 top: `${dragStatus.dragPosition.y}px`},
+            ], {duration:150, easing:"ease-out"});
+        }
+
         targetElement.style.top = `${dragStatus.dragPosition.y}px`;
         targetElement.style.left = `${dragStatus.dragPosition.x}px`;
 

@@ -156,7 +156,7 @@ export function make_element_draggable(targetElement)
                  top: targetElement.style.top},
                 {left: `${dragStatus.dragPosition.x}px`,
                  top: `${dragStatus.dragPosition.y}px`},
-            ], {duration:150, easing:"ease-out"});
+            ], {duration:150, easing:"ease-in-out"});
         }
 
         targetElement.style.top = `${dragStatus.dragPosition.y}px`;

@@ -59,14 +59,13 @@ export function make_element_draggable(targetElement)
         {
             return;
         }
-        
+
         const deltaX = (document.body.clientWidth - dragStatus.windowSize.x);
 
         dragStatus.windowSize.x = document.body.clientWidth;
         dragStatus.windowSize.y = document.body.clientHeight;
 
         dragStatus.dragPosition.x += deltaX;
-
         update_element_position();
 
         return;
@@ -79,8 +78,14 @@ export function make_element_draggable(targetElement)
             return;
         }
 
-        dragStatus.isDragging = false;
-        targetElement.classList.remove("dragging");
+        if (dragStatus.isDragging)
+        {
+            dragStatus.isDragging = false;
+            targetElement.classList.remove("dragging");
+
+            clip_element_to_edges();
+            update_element_position();
+        }
 
         return;
     });
@@ -105,6 +110,22 @@ export function make_element_draggable(targetElement)
 
         return;
     });
+
+    function clip_element_to_edges()
+    {
+        const marginLeft = 6;
+        const marginRight = 6;
+        const marginTop = 6;
+        const marginBottom = 6;
+
+        const maxX = (document.body.clientWidth - draggerElement.clientWidth - marginRight);
+        const maxY = (document.body.clientHeight - draggerElement.clientHeight - marginBottom);
+
+        dragStatus.dragPosition.x = Math.max(marginLeft, Math.min(maxX, dragStatus.dragPosition.x));
+        dragStatus.dragPosition.y = Math.max(marginTop, Math.min(maxY, dragStatus.dragPosition.y));
+
+        return;
+    }
 
     function update_element_position()
     {

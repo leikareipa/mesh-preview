@@ -1,7 +1,9 @@
 :root
 {
-    --color-border-main: lightgray;
-    --color-border-secondary: lightgray;
+    --border-color--main: lightgray;
+    --border-color--secondary: lightgray;
+    --border-color--highlight: gray;
+    --color--disabled: lightgray;
 }
 
 body
@@ -19,7 +21,7 @@ body
     position: absolute;
     bottom: 40px;
     left: 40px;
-    border: 1px solid var(--color-border-main);
+    border: 1px solid var(--border-color--main);
     border-radius: 3px;
     height: 0;
     display: flex;
@@ -36,6 +38,7 @@ body
 .info-box.expanded
 {
     justify-content: left;
+    border-color: var(--border-color--highlight);
 }
 
 .info-box a
@@ -63,7 +66,7 @@ body
     top: 3%;
     right: 3%;
     z-index: 1;
-    border: 1px solid var(--color-border-main);
+    border: 1px solid var(--border-color--main);
     border-radius: 3px;
     width: 285px;
     background-color: white;
@@ -104,7 +107,7 @@ body
 
 #control-panel .section + .section
 {
-    border-top: 1px solid var(--color-border-secondary);
+    border-top: 1px solid var(--border-color--secondary);
 }
 
 #control-panel .dragger
@@ -126,7 +129,7 @@ body
     margin-top: 27px;
     margin-bottom: 5px;
     border: none;
-    border-bottom: 1px solid var(--color-border-secondary);
+    border-bottom: 1px solid var(--border-color--secondary);
 }
 
 #control-panel .field
@@ -146,10 +149,16 @@ body
     appearance: none;
     padding: 10px;
     margin-top: 8px;
-    border: 1px solid var(--color-border-secondary);
+    border: 1px solid var(--border-color--secondary);
     border-radius: 6px;
     background-color: white;
     outline: none;
+}
+
+#control-panel .field select:focus,
+#control-panel .field input:focus
+{
+    border-color: var(--border-color--highlight);
 }
 
 #control-panel .field input[type="number"]::-webkit-outer-spin-button,
@@ -165,7 +174,7 @@ body
 
 #control-panel .field.disabled *
 {
-    color: lightgray;
+    color: var(--color-disabled);
     pointer-events: none;
     cursor: not-allowed;
 }
@@ -204,5 +213,5 @@ body
 {
     transform: translateY(40px);
     filter: blur(1px);
-    color: lightgray;
+    color: var(--color--disabled);
 }

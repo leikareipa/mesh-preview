@@ -68,7 +68,7 @@ body
     z-index: 1;
     border: 1px solid var(--border-color--main);
     border-radius: 3px;
-    width: 285px;
+    width: 280px;
     background-color: white;
     overflow: hidden;
     box-shadow: white 0px 0px 0px 6px;

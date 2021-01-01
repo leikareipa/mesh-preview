@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Minimal sample - Mesh preview</title>
+
+        <script type="module">
+            import {start_mesh_preview} from "../../src/start.js";
+
+            start_mesh_preview({
+                meshesMetadata: [{name: "Triangle"}],
+                get_mesh_data: ()=>([[{x:-1, y:-1, z:0},
+                                      {x: 0, y: 1, z:0},
+                                      {x: 1, y:-1, z:0}]]),
+                modulePath: "../../src/",
+                defaultViewDistance: 4,
+            });
+        </script>
+    </head>
+</html>

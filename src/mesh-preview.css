@@ -52,14 +52,19 @@ body
     text-decoration: underline;
 }
 
-#luujanko-rendering-container
+.rendering
 {
     position: relative;
     top: 0;
     z-index: 0;
 }
 
-#control-panel
+.luujanko-surface
+{
+    pointer-events: none;
+}
+
+.control-panel
 {
     user-select: none;
     position: absolute;
@@ -76,14 +81,14 @@ body
     transition: none;
 }
 
-#control-panel.drag-auto
+.control-panel.drag-auto
 {
     transition-timing-function: ease-out;
     transition: top 0.175s,
                 left 0.175s;
 }
 
-#control-panel .section
+.control-panel .section
 {
     padding: 0 20px;
     height: 50px;
@@ -92,7 +97,7 @@ body
     justify-content: center;
 }
 
-#control-panel .section.polycount
+.control-panel .section.polycount
 {
     display: flex;
     flex-direction: row;
@@ -101,24 +106,24 @@ body
     overflow: hidden;
 }
 
-#control-panel .section.fields
+.control-panel .section.fields
 {
     height: auto;
     padding: 20px 20px;
 }
 
-#control-panel .section.dragger
+.control-panel .section.dragger
 {
     padding: 0;
     height: 45px;
 }
 
-#control-panel .section + .section
+.control-panel .section + .section
 {
     border-top: 1px solid var(--border-color--secondary);
 }
 
-#control-panel .dragger
+.control-panel .dragger
 {
     cursor: grab;
     background-color: lightgray;
@@ -127,12 +132,12 @@ body
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi2r9//38gYGAEESAAEGAAasgJOgzOKCoAAAAASUVORK5CYII=);
 }
 
-#control-panel.dragging .dragger
+.control-panel.dragging .dragger
 {
     cursor: grabbing;
 }
 
-#control-panel hr
+.control-panel hr
 {
     margin-top: 27px;
     margin-bottom: 5px;
@@ -140,19 +145,19 @@ body
     border-bottom: 1px solid var(--border-color--secondary);
 }
 
-#control-panel .field
+.control-panel .field
 {
     display: flex;
     flex-direction: column;
 }
 
-#control-panel .field + .field
+.control-panel .field + .field
 {
     margin-top: 10px;
 }
 
-#control-panel .field select,
-#control-panel .field input
+.control-panel .field select,
+.control-panel .field input
 {
     appearance: none;
     padding: 10px;
@@ -163,24 +168,24 @@ body
     outline: none;
 }
 
-#control-panel .field select:focus,
-#control-panel .field input:focus
+.control-panel .field select:focus,
+.control-panel .field input:focus
 {
     border-color: var(--border-color--highlight);
 }
 
-#control-panel .field input[type="number"]::-webkit-outer-spin-button,
-#control-panel .field input[type="number"]::-webkit-inner-spin-button
+.control-panel .field input[type="number"]::-webkit-outer-spin-button,
+.control-panel .field input[type="number"]::-webkit-inner-spin-button
 {
     display: none;
 }
 
-#control-panel .field input[type="number"]
+.control-panel .field input[type="number"]
 {
     -moz-appearance: textfield;
 }
 
-#control-panel .field.disabled *
+.control-panel .field.disabled *
 {
     color: var(--color-disabled);
     pointer-events: none;

@@ -14,7 +14,7 @@ export default Vue.component("control-panel", {
         // Note: make_draggable() needs to know the target element's initial size,
         // so it shouldn't be called until the element has been initialized - which
         // is why we call it in this hook.
-        make_element_draggable(document.getElementById("control-panel"));
+        make_element_draggable(this.$refs["control-panel"]);
     },
     data: function()
     {
@@ -92,7 +92,8 @@ export default Vue.component("control-panel", {
         },
     },
     template: `
-        <div id="control-panel">
+        <div class="control-panel"
+             ref="control-panel">
 
             <div class="section dragger">
 

@@ -18,6 +18,12 @@ export default Vue.component("rendering", {
         };
     },
     computed: {
+        svgImage: {
+            get: function()
+            {
+                return this.$refs["svg-image"];
+            },
+        },
         startupArgs: {
             get: function()
             {
@@ -50,11 +56,9 @@ export default Vue.component("rendering", {
     methods: {
         render_frame: function()
         {
-            const svgImage = document.getElementById("luujanko-rendering");
-
-            // Have the SVG fill the entire viewport.
-            svgImage.setAttribute("width", document.documentElement.clientWidth);
-            svgImage.setAttribute("height", document.documentElement.clientHeight);
+            // Have the SVG fill the entire window.
+            this.svgImage.setAttribute("width", document.documentElement.clientWidth);
+            this.svgImage.setAttribute("height", document.documentElement.clientHeight);
 
             if (this.startupArgs.continuousRendering)
             {
@@ -78,7 +82,7 @@ export default Vue.component("rendering", {
                 viewPosition: Luu.translation(0, 0, -viewDistance),
             };
 
-            Luu.render([scene], svgImage, options);
+            Luu.render([scene], this.svgImage, options);
 
             self.needsRepaint = false;
         },
@@ -104,10 +108,10 @@ export default Vue.component("rendering", {
         })();
     },
     template: `
-        <div id="luujanko-rendering-container">
+        <div class="rendering">
 
-            <svg id="luujanko-rendering"
-                 style="pointer-events: none;">
+            <svg class="luujanko-surface"
+                 ref="svg-image">
             </svg>
 
         </div>

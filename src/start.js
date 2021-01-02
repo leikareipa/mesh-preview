@@ -151,25 +151,25 @@ export function start_mesh_preview(args = {})
         },
         mounted()
         {
-            const self = this;
-
             this.$store.commit("set_mesh_idx", 0);
 
-            (function screen_refresh_loop(timestamp = 0, frameTimeDeltaMs = 0, frameCount = 0)
+            if (args.continuousRendering)
             {
-                if (args.continuousRendering)
+                const self = this;
+
+                (function screen_refresh_loop(timestamp = 0, frameTimeDeltaMs = 0, frameCount = 0)
                 {
                     self.frameCount++;
                     self.frameTimeDeltaMs = frameTimeDeltaMs;
-                }
 
-                window.requestAnimationFrame((newTimestamp)=>
-                {
-                    screen_refresh_loop(newTimestamp,
-                                        (newTimestamp - timestamp),
-                                        (frameCount + 1));
-                });
-            })();
+                    window.requestAnimationFrame((newTimestamp)=>
+                    {
+                        screen_refresh_loop(newTimestamp,
+                                            (newTimestamp - timestamp),
+                                            (frameCount + 1));
+                    });
+                })();
+            }
         },
         template: `
         <div>

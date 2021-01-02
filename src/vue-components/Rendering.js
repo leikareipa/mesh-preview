@@ -83,8 +83,8 @@ export default Vue.component("rendering", {
             };
 
             Luu.render([scene], this.svgImage, options);
-
-            self.needsRepaint = false;
+            
+            this.needsRepaint = false;
         },
     },
     mounted()

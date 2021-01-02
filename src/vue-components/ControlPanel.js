@@ -92,72 +92,72 @@ export default Vue.component("control-panel", {
         },
     },
     template: `
-    <div id="control-panel">
+        <div id="control-panel">
 
-        <div class="section dragger">
+            <div class="section dragger">
 
-            <!-- This is used for mouse dragging; the dragger script attaches itself here. -->
-
-        </div>
-
-        <div class="section fields">
-
-            <div class="field">
-
-                <span>Mesh</span>
-
-                <select v-model="activeMeshIdx"
-                        ref="mesh-selector">
-
-                    <option v-for="(mesh, idx) in this.$store.state.knownMeshes"
-                            v-bind:value="idx"
-                            v-bind:key="mesh.name">
-
-                        {{mesh.name}}
-
-                    </option>
-
-                </select>
+                <!-- This is used for mouse dragging; the dragger script attaches itself here. -->
 
             </div>
-            
-            <div class="field">
 
-                <span>
+            <div class="section fields">
+
+                <div class="field">
+
+                    <span>Mesh</span>
+
+                    <select v-model="activeMeshIdx"
+                            ref="mesh-selector">
+
+                        <option v-for="(mesh, idx) in this.$store.state.knownMeshes"
+                                v-bind:value="idx"
+                                v-bind:key="mesh.name">
+
+                            {{mesh.name}}
+
+                        </option>
+
+                    </select>
+
+                </div>
                 
-                    View distance
-                
-                </span>
+                <div class="field">
 
-                <input type="number"
-                       step="any"
-                       v-model="viewDistance">
+                    <span>
+                    
+                        View distance
+                    
+                    </span>
 
-            </div>
-
-        </div>
-
-        <div class="section polycount">
-
-            <div style="margin-right: auto;">
-
-                Polycount:
-
-            </div>
-
-            <transition name="drop">
-
-                <div v-if="!loading"
-                     style="margin-left: auto;">
-
-                    {{ngons.length? ngons.length : ""}}
+                    <input type="number"
+                           step="any"
+                           v-model="viewDistance">
 
                 </div>
 
-            </transition>
+            </div>
+
+            <div class="section polycount">
+
+                <div style="margin-right: auto;">
+
+                    Polycount:
+
+                </div>
+
+                <transition name="drop">
+
+                    <div v-if="!loading"
+                         style="margin-left: auto;">
+
+                        {{ngons.length? ngons.length : ""}}
+
+                    </div>
+
+                </transition>
+
+            </div>
 
         </div>
-
-    </div>
     `,
 });

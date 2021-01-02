@@ -43,33 +43,33 @@ export default Vue.component("info-box", {
         this.adjust_box_width();
     },
     template: `
-    <div class="info-box"
-         v-bind:class="{expanded}"
-         v-on:click="box_clicked"
-         ref="info-box-container">
+        <div class="info-box"
+             v-bind:class="{expanded}"
+             v-on:click="box_clicked"
+             ref="info-box-container">
 
-        <div v-if="!expanded"
-             ref="info-box-text">
-            ?
+            <div v-if="!expanded"
+                 ref="info-box-text">
+                ?
+            </div>
+
+            <div v-else
+                 ref="info-box-text">
+
+                &ldquo;Mesh preview&rdquo; by
+                <a href="https://www.tarpeeksihyvaesoft.com" target="_blank">Tarpeeksi Hyvae Soft</a>
+
+                <span v-if="infoText.length"
+                      style="margin: 5px;">
+                    
+                    &bull;
+
+                </span>
+
+                <span v-html="infoText"></span>
+
+            </div>
+
         </div>
-
-        <div v-else
-             ref="info-box-text">
-
-            &ldquo;Mesh preview&rdquo; by
-            <a href="https://www.tarpeeksihyvaesoft.com" target="_blank">Tarpeeksi Hyvae Soft</a>
-
-            <span v-if="infoText.length"
-                  style="margin: 5px;">
-                  
-                &bull;
-
-            </span>
-
-            <span v-html="infoText"></span>
-
-        </div>
-
-    </div>
     `,
 });

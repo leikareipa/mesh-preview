@@ -16,7 +16,7 @@ It may be best to start by looking at the `minimal` sample, as it shows the bare
 
 ## Interface
 
-The app exposes only one function, `start_mesh_preview()`. This function can be imported from [src/start.js](src/start.js). The function takes as its argument a single object, whose properties define how the app should operate. The properties are documented in the table, below. (Note that not all of these properties need to be defined by the caller, as all of them have default values.)
+The app exposes only one function, `start_mesh_preview()`. This function can be imported from [src/mesh-preview.js](src/mesh-preview.js). The function takes as its argument a single object, whose properties define how the app should operate. The properties are documented in the table, below. (Note that not all of these properties need to be defined by the caller, as all of them have default values.)
 
 | Property | Explanation |
 | -------- | ----------- |

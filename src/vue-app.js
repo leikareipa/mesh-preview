@@ -1,68 +1,18 @@
-/*
- * 2020 Tarpeeksi Hyvae Soft
- * 
- * Software: Mesh preview
- *
- */
 
 import Vue from "./vue.esm.browser.min.js";
-import Vuex from "./vuex.esm.browser.min.js";
-
 import InfoBox from "./vue-components/InfoBox.js";
 import Rendering from "./vue-components/Rendering.js";
 import ControlPanel from "./vue-components/ControlPanel.js";
 
 import {Luu} from "./luujanko.js";
 
-export function start_mesh_preview(args = {})
+export function run_app(store)
 {
-    args = combined_with_default_args(args);
-
-    const containerElement = document.createElement("div");
-    containerElement.setAttribute("id", args.containerId);
-    document.body.appendChild(containerElement);
-
-    Vue.use(Vuex);
-
-    const meshPreviewStore = new Vuex.Store({
-        state: {
-            startupArgs: args,
-            knownMeshes: args.meshesMetadata,
-            activeMeshIdx: -1,
-            activeMeshNgons: [],
-            viewDistance: args.defaultViewDistance,
-        },
-        mutations: {
-            async set_mesh_idx(state, activeMeshIdx)
-            {
-                state.activeMeshIdx = activeMeshIdx;
-                state.activeMeshNgons = [];
-                        
-                try
-                {
-                    const meshMetadata = state.knownMeshes[state.activeMeshIdx];
-                    const meshData = await args.get_mesh_data(meshMetadata);
-                    const luujankoMesh = meshData.map(face=>Luu.ngon(face.map(v=>Luu.vertex(v.x, v.y, v.z))));
-
-                    state.activeMeshNgons = luujankoMesh;
-                    state.viewDistance = (meshMetadata.viewDistance || state.startupArgs.defaultViewDistance || 40000);
-                }
-                catch (error)
-                {
-                    window.alert(error);
-                    console.error(error);
-                }
-            },
-            set_render_distance(state, distance)
-            {
-                state.viewDistance = distance;
-            },
-        }
-    });
-
-    const app = new Vue({
+    const args = store.state.startupArgs;
+    
+    return new Vue({
         el: `#${args.containerId}`,
-        store: meshPreviewStore,
+        store: store,
         data: {
             frameCount: 0,
             frameTimeDeltaMs: 0,
@@ -158,50 +108,19 @@ export function start_mesh_preview(args = {})
             }
         },
         template: `
-        <div>
+            <div>
 
-            <link rel="stylesheet"
-                  type="text/css"
-                  href="${args.modulePath}/mesh-preview.css">
+                <link rel="stylesheet"
+                      type="text/css"
+                      href="${args.modulePath}/mesh-preview.css">
 
-            <mesh-preview-rendering></mesh-preview-rendering>
+                <mesh-preview-rendering></mesh-preview-rendering>
 
-            <mesh-preview-control-panel v-if="${args.guiVisibility.controlPanel}"></mesh-preview-control-panel>
+                <mesh-preview-control-panel v-if="${args.guiVisibility.controlPanel}"></mesh-preview-control-panel>
 
-            <mesh-preview-info-box v-if="${args.guiVisibility.infoBox}"></mesh-preview-info-box>
-            
-        </div>
+                <mesh-preview-info-box v-if="${args.guiVisibility.infoBox}"></mesh-preview-info-box>
+                
+            </div>
         `,
     });
-
-    return;
-}
-
-function combined_with_default_args(args)
-{
-    const combinedArgs = {
-        ...{
-            infoText: "",
-            modulePath: "./",
-            get_mesh_data: async (meshMetadata)=>([]),
-            meshesMetadata: [],
-            containerId: "mesh-preview",
-            defaultOrientation: [0.5, 0, 0],
-            rotationDelta: [0, 0.0006, 0],
-            defaultViewDistance: 40000,
-            continuousRendering: true,
-            guiVisibility: {},
-        },
-        ...args,
-    };
-
-    combinedArgs.guiVisibility = {
-        ...{// Default arguments.
-            controlPanel: true,
-            infoBox: true,
-        },
-        ...combinedArgs.guiVisibility,
-    };
-
-    return combinedArgs;
 }

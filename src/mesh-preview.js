@@ -5,19 +5,14 @@
  *
  */
 
-import {create_store} from "./vue-store.js";
-import {run_app} from "./vue-app.js";
+import {create_mesh_preview_store} from "./vue-store.js";
+import {run_mesh_preview_app} from "./vue-app.js";
 
 export function start_mesh_preview(startupArgs = {})
 {
     startupArgs = combined_with_default_args(startupArgs);
-
-    const containerElement = document.createElement("div");
-    containerElement.setAttribute("id", startupArgs.containerId);
-    document.body.appendChild(containerElement);
-
-    const appStore = create_store(startupArgs);
-    run_app(appStore);
+    const store = create_mesh_preview_store(startupArgs);
+    run_mesh_preview_app(store);
     
     return;
 }

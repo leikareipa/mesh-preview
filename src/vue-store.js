@@ -9,7 +9,7 @@ import Vue from "./vue.esm.browser.min.js";
 import Vuex from "./vuex.esm.browser.min.js";
 import {Luu} from "./luujanko.js";
 
-export function create_store(args)
+export function create_mesh_preview_store(args)
 {
     Vue.use(Vuex);
 

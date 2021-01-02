@@ -4,123 +4,49 @@ import InfoBox from "./vue-components/InfoBox.js";
 import Rendering from "./vue-components/Rendering.js";
 import ControlPanel from "./vue-components/ControlPanel.js";
 
-import {Luu} from "./luujanko.js";
-
-export function run_app(store)
+export function run_mesh_preview_app(vuexStore)
 {
-    const args = store.state.startupArgs;
+    const startupArgs = vuexStore.state.startupArgs;
+
+    create_app_container_element(startupArgs.containerId);
     
-    return new Vue({
-        el: `#${args.containerId}`,
-        store: store,
-        data: {
-            frameCount: 0,
-            frameTimeDeltaMs: 0,
-            rotationVector: Luu.rotation(...args.defaultOrientation),
-        },
+    const app = new Vue({
+        el: `#${startupArgs.containerId}`,
+        store: vuexStore,
         components: {
             "mesh-preview-info-box": InfoBox,
             "mesh-preview-control-panel": ControlPanel,
             "mesh-preview-rendering": Rendering,
         },
-        computed: {
-            viewDistance: {
-                get: function()
-                {
-                    return this.$store.state.viewDistance;
-                },
-            },
-            meshNgons: {
-                get: function()
-                {
-                    return this.$store.state.activeMeshNgons;
-                },
-            },
-        },
-        watch: {
-            frameCount: function()
-            {
-                this.render_frame();
-            },
-            viewDistance: function()
-            {
-                this.frameCount++;
-            },
-            meshNgons: function()
-            {
-                this.frameCount++;
-            },
-        },
-        methods: {
-            render_frame: function()
-            {
-                const svgImage = document.getElementById("luujanko-rendering");
-
-                // Have the SVG fill the entire viewport.
-                svgImage.setAttribute("width", document.documentElement.clientWidth);
-                svgImage.setAttribute("height", document.documentElement.clientHeight);
-
-                if (args.continuousRendering)
-                {
-                    this.rotationVector.x += (args.rotationDelta[0] * this.frameTimeDeltaMs);
-                    this.rotationVector.y += (args.rotationDelta[1] * this.frameTimeDeltaMs);
-                    this.rotationVector.z += (args.rotationDelta[2] * this.frameTimeDeltaMs);
-                }
-
-                const ngons = (this.$store.state.activeMeshNgons || []);
-                const viewDistance = (this.$store.state.viewDistance || args.defaultViewDistance);
-
-                const scene = Luu.mesh(ngons, {
-                    rotation: this.rotationVector,
-                });
-
-                const options = {
-                    fov: 70,
-                    nearPlane: 0.1,
-                    farPlane: 10000000,
-                    viewRotation: Luu.rotation(0, 0, 0),
-                    viewPosition: Luu.translation(0, 0, -viewDistance),
-                };
-
-                Luu.render([scene], svgImage, options);
-            },
-        },
         mounted()
         {
             this.$store.commit("set_mesh_idx", 0);
-
-            if (args.continuousRendering)
-            {
-                const self = this;
-
-                (function screen_refresh_loop(timestamp = 0, frameTimeDeltaMs = 0, frameCount = 0)
-                {
-                    self.frameCount++;
-                    self.frameTimeDeltaMs = frameTimeDeltaMs;
-
-                    window.requestAnimationFrame((newTimestamp)=>
-                    {
-                        screen_refresh_loop(newTimestamp,
-                                            (newTimestamp - timestamp),
-                                            (frameCount + 1));
-                    });
-                })();
-            }
         },
         template: `
             <div>
 
                 <link rel="stylesheet"
                       type="text/css"
-                      href="${args.modulePath}/mesh-preview.css">
+                      href="${startupArgs.modulePath}/mesh-preview.css">
 
                 <mesh-preview-rendering></mesh-preview-rendering>
 
-                <mesh-preview-control-panel v-if="${args.guiVisibility.controlPanel}"></mesh-preview-control-panel>
+                <mesh-preview-control-panel v-if="${startupArgs.guiVisibility.controlPanel}"></mesh-preview-control-panel>
 
-                <mesh-preview-info-box v-if="${args.guiVisibility.infoBox}"></mesh-preview-info-box>
+                <mesh-preview-info-box v-if="${startupArgs.guiVisibility.infoBox}"></mesh-preview-info-box>
                 
             </div>
         `,
     });
+
+    return app;
+}
+
+function create_app_container_element(id = "mesh-preview")
+{
+    const containerElement = document.createElement("div");
+    containerElement.setAttribute("id", id);
+    document.body.appendChild(containerElement);
+
+    return;
 }

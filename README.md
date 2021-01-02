@@ -6,7 +6,7 @@ For interactive rendering, this app is currently not recommended when the polyco
 
 A live sample of the app can be found [here](https://www.tarpeeksihyvaesoft.com/experimental/mesh-preview/samples/obj-models/).
 
-![](./screenshot.png)
+![](./screenshots/mesh-preview-1.png)
 
 # Usage
 

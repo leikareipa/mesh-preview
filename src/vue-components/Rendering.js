@@ -12,7 +12,7 @@ export default Vue.component("rendering", {
     data: function()
     {
         return {
-            frameCount: 0,
+            needsRepaint: false,
             frameTimeDeltaMs: 0,
             rotationVector: Luu.rotation(...this.$store.state.startupArgs.defaultOrientation),
         };
@@ -38,17 +38,13 @@ export default Vue.component("rendering", {
         },
     },
     watch: {
-        frameCount: function()
-        {
-            this.render_frame();
-        },
         viewDistance: function()
         {
-            this.frameCount++;
+            this.needsRepaint = true;
         },
         meshNgons: function()
         {
-            this.frameCount++;
+            this.needsRepaint = true;
         },
     },
     methods: {
@@ -83,27 +79,29 @@ export default Vue.component("rendering", {
             };
 
             Luu.render([scene], svgImage, options);
+
+            self.needsRepaint = false;
         },
     },
     mounted()
     {
-        if (this.startupArgs.continuousRendering)
+        const self = this;
+
+        (function screen_refresh_loop(timestamp = 0, frameTimeDeltaMs = 0)
         {
-            const self = this;
-
-            (function screen_refresh_loop(timestamp = 0, frameTimeDeltaMs = 0, frameCount = 0)
+            if (self.needsRepaint ||
+                self.startupArgs.continuousRendering)
             {
-                self.frameCount++;
-                self.frameTimeDeltaMs = frameTimeDeltaMs;
+                self.render_frame();
+            }
 
-                window.requestAnimationFrame((newTimestamp)=>
-                {
-                    screen_refresh_loop(newTimestamp,
-                                        (newTimestamp - timestamp),
-                                        (frameCount + 1));
-                });
-            })();
-        }
+            self.frameTimeDeltaMs = frameTimeDeltaMs;
+
+            window.requestAnimationFrame((newTimestamp)=>
+            {
+                screen_refresh_loop(newTimestamp, (newTimestamp - timestamp));
+            });
+        })();
     },
     template: `
         <div id="luujanko-rendering-container">

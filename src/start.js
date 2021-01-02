@@ -26,6 +26,7 @@ export function start_mesh_preview(args = {})
             defaultOrientation: [0.5, 0, 0],
             rotationDelta: [0, 0.0006, 0],
             defaultViewDistance: 40000,
+            continuousRendering: true,
         },
         ...args,
     };
@@ -77,22 +78,45 @@ export function start_mesh_preview(args = {})
         el: `#${args.containerId}`,
         store: meshPreviewStore,
         data: {
+            frameCount: 0,
+            frameTimeDeltaMs: 0,
+            rotationVector: Luu.rotation(...args.defaultOrientation),
         },
         components: {
             "mesh-preview-info-box": InfoBox,
             "mesh-preview-control-panel": ControlPanel,
             "mesh-preview-rendering": Rendering,
         },
-        mounted()
-        {
-            const uiStore = this.$store;
-            const rotationVector = Luu.rotation(...uiStore.state.startupArgs.defaultOrientation);
-
-            uiStore.commit("set_mesh_idx", 0);
-
-            // Start the renderer. It'll keep running and rendering whatever polygons the
-            // UI gives it.
-            (function render_loop(timestamp = 0, frameTimeDeltaMs = 0, frameCount = 0)
+        computed: {
+            viewDistance: {
+                get: function()
+                {
+                    return this.$store.state.viewDistance;
+                },
+            },
+            meshNgons: {
+                get: function()
+                {
+                    return this.$store.state.activeMeshNgons;
+                },
+            },
+        },
+        watch: {
+            frameCount: function()
+            {
+                this.render_frame();
+            },
+            viewDistance: function()
+            {
+                this.frameCount++;
+            },
+            meshNgons: function()
+            {
+                this.frameCount++;
+            },
+        },
+        methods: {
+            render_frame: function()
             {
                 const svgImage = document.getElementById("luujanko-rendering");
 
@@ -100,32 +124,50 @@ export function start_mesh_preview(args = {})
                 svgImage.setAttribute("width", document.documentElement.clientWidth);
                 svgImage.setAttribute("height", document.documentElement.clientHeight);
 
-                // Automatically rotate the model.
-                rotationVector.x += (uiStore.state.startupArgs.rotationDelta[0] * frameTimeDeltaMs);
-                rotationVector.y += (uiStore.state.startupArgs.rotationDelta[1] * frameTimeDeltaMs);
-                rotationVector.z += (uiStore.state.startupArgs.rotationDelta[2] * frameTimeDeltaMs);
+                if (args.continuousRendering)
+                {
+                    this.rotationVector.x += (args.rotationDelta[0] * this.frameTimeDeltaMs);
+                    this.rotationVector.y += (args.rotationDelta[1] * this.frameTimeDeltaMs);
+                    this.rotationVector.z += (args.rotationDelta[2] * this.frameTimeDeltaMs);
+                }
 
-                const ngons = (uiStore.state.activeMeshNgons || []);
-                const viewDistance = (uiStore.state.viewDistance || uiStore.state.startupArgs.defaultViewDistance);
+                const ngons = (this.$store.state.activeMeshNgons || []);
+                const viewDistance = (this.$store.state.viewDistance || args.defaultViewDistance);
 
                 const scene = Luu.mesh(ngons, {
-                    rotation: rotationVector,
+                    rotation: this.rotationVector,
                 });
 
                 const options = {
                     fov: 70,
-                    farPlane: 100000000,
+                    nearPlane: 0.1,
+                    farPlane: 10000000,
                     viewRotation: Luu.rotation(0, 0, 0),
                     viewPosition: Luu.translation(0, 0, -viewDistance),
                 };
 
                 Luu.render([scene], svgImage, options);
+            },
+        },
+        mounted()
+        {
+            const self = this;
+
+            this.$store.commit("set_mesh_idx", 0);
+
+            (function screen_refresh_loop(timestamp = 0, frameTimeDeltaMs = 0, frameCount = 0)
+            {
+                if (args.continuousRendering)
+                {
+                    self.frameCount++;
+                    self.frameTimeDeltaMs = frameTimeDeltaMs;
+                }
 
                 window.requestAnimationFrame((newTimestamp)=>
                 {
-                    render_loop(newTimestamp,
-                                (newTimestamp - timestamp),
-                                (frameCount + 1));
+                    screen_refresh_loop(newTimestamp,
+                                        (newTimestamp - timestamp),
+                                        (frameCount + 1));
                 });
             })();
         },

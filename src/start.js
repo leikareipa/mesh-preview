@@ -16,22 +16,8 @@ import {Luu} from "./luujanko.js";
 
 export function start_mesh_preview(args = {})
 {
-    args = {
-        ...{// Default arguments.
-            infoText: "",
-            modulePath: "./",
-            get_mesh_data: async (meshMetadata)=>([]),
-            meshesMetadata: [],
-            containerId: "mesh-preview",
-            defaultOrientation: [0.5, 0, 0],
-            rotationDelta: [0, 0.0006, 0],
-            defaultViewDistance: 40000,
-            continuousRendering: true,
-        },
-        ...args,
-    };
+    args = combined_with_default_args(args);
 
-    // Create the app's container DOM element.
     const containerElement = document.createElement("div");
     containerElement.setAttribute("id", args.containerId);
     document.body.appendChild(containerElement);
@@ -180,13 +166,42 @@ export function start_mesh_preview(args = {})
 
             <mesh-preview-rendering></mesh-preview-rendering>
 
-            <mesh-preview-control-panel></mesh-preview-control-panel>
+            <mesh-preview-control-panel v-if="${args.guiVisibility.controlPanel}"></mesh-preview-control-panel>
 
-            <mesh-preview-info-box></mesh-preview-info-box>
+            <mesh-preview-info-box v-if="${args.guiVisibility.infoBox}"></mesh-preview-info-box>
             
         </div>
         `,
     });
 
     return;
+}
+
+function combined_with_default_args(args)
+{
+    const combinedArgs = {
+        ...{
+            infoText: "",
+            modulePath: "./",
+            get_mesh_data: async (meshMetadata)=>([]),
+            meshesMetadata: [],
+            containerId: "mesh-preview",
+            defaultOrientation: [0.5, 0, 0],
+            rotationDelta: [0, 0.0006, 0],
+            defaultViewDistance: 40000,
+            continuousRendering: true,
+            guiVisibility: {},
+        },
+        ...args,
+    };
+
+    combinedArgs.guiVisibility = {
+        ...{// Default arguments.
+            controlPanel: true,
+            infoBox: true,
+        },
+        ...combinedArgs.guiVisibility,
+    };
+
+    return combinedArgs;
 }

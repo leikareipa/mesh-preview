@@ -91,6 +91,11 @@ export default Vue.component("rendering", {
     {
         const self = this;
 
+        window.addEventListener("resize", ()=>
+        {
+            self.needsRepaint = true;
+        });
+
         (function screen_refresh_loop(timestamp = 0, frameTimeDeltaMs = 0)
         {
             if (self.needsRepaint ||

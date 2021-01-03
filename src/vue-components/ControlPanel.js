@@ -146,7 +146,7 @@ export default Vue.component("control-panel", {
 
                 </div>
 
-                <transition name="drop">
+                <transition name="mesh-preview-transition-drop">
 
                     <div v-if="!loading"
                          style="margin-left: auto;">

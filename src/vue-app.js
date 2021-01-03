@@ -23,7 +23,7 @@ export function run_mesh_preview_app(vuexStore)
             this.$store.commit("set_mesh_idx", 0);
         },
         template: `
-            <div>
+            <div class="mesh-preview">
 
                 <link rel="stylesheet"
                       type="text/css"

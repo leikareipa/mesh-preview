@@ -13,7 +13,6 @@ export default Vue.component("rendering", {
     {
         return {
             needsRepaint: false,
-            frameTimeDeltaMs: 0,
             rotationVector: Luu.rotation(...this.$store.state.startupArgs.defaultOrientation),
         };
     },
@@ -54,7 +53,7 @@ export default Vue.component("rendering", {
         },
     },
     methods: {
-        render_frame: function()
+        render_frame: function(frameTimeDeltaMs = 0)
         {
             // Have the SVG fill the entire window.
             this.svgImage.setAttribute("width", document.documentElement.clientWidth);
@@ -62,9 +61,9 @@ export default Vue.component("rendering", {
 
             if (this.startupArgs.continuousRendering)
             {
-                this.rotationVector.x += (this.startupArgs.rotationDelta[0] * this.frameTimeDeltaMs);
-                this.rotationVector.y += (this.startupArgs.rotationDelta[1] * this.frameTimeDeltaMs);
-                this.rotationVector.z += (this.startupArgs.rotationDelta[2] * this.frameTimeDeltaMs);
+                this.rotationVector.x += (this.startupArgs.rotationDelta[0] * frameTimeDeltaMs);
+                this.rotationVector.y += (this.startupArgs.rotationDelta[1] * frameTimeDeltaMs);
+                this.rotationVector.z += (this.startupArgs.rotationDelta[2] * frameTimeDeltaMs);
             }
 
             const ngons = (this.$store.state.activeMeshNgons || []);
@@ -101,10 +100,8 @@ export default Vue.component("rendering", {
             if (self.needsRepaint ||
                 self.startupArgs.continuousRendering)
             {
-                self.render_frame();
-            }
-
-            self.frameTimeDeltaMs = frameTimeDeltaMs;
+                self.render_frame(frameTimeDeltaMs);
+            }    
 
             window.requestAnimationFrame((newTimestamp)=>
             {

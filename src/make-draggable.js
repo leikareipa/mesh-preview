@@ -172,20 +172,15 @@ export function make_element_draggable(targetElement)
             throw new Error("Unknown target element.");
         }
 
-        const style = window.getComputedStyle(targetElement);
-        const left = Number(style.left.replace(/[^\d-.,]+/g, ""));
-        const right = Number(style.right.replace(/[^\d-.,]+/g, ""));
-        const top = Number(style.top.replace(/[^\d-.,]+/g, ""));
-        const bottom = Number(style.bottom.replace(/[^\d-.,]+/g, ""));
+        dragStatus.dragPosition.x = targetElement.getBoundingClientRect().left;
+        dragStatus.dragPosition.y = targetElement.getBoundingClientRect().top;
 
-        dragStatus.dragPosition.x = (targetElement.style.left? left : (document.body.clientWidth - right - targetElement.getBoundingClientRect().width));
-        dragStatus.dragPosition.y = (targetElement.style.top? top : (document.body.clientHeight - bottom - targetElement.getBoundingClientRect().height));
-
-        dragStatus.windowSize.x = document.body.clientWidth;
-        dragStatus.windowSize.y = document.body.clientHeight;
+        dragStatus.windowSize.x = window.innerWidth;
+        dragStatus.windowSize.y = window.innerHeight;
 
         targetElement.style.right = "";
         targetElement.style.bottom = "";
+        targetElement.style.transform = "none";
 
         dragStatus.isInitialized = true;
 

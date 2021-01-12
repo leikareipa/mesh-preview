@@ -50,6 +50,11 @@ export function make_element_draggable(targetElement)
             return;
         }
 
+        if (!dragStatus.isInitialized)
+        {
+            initialize_dragging();
+        }
+
         dragStatus.mousePosition.x = event.clientX;
         dragStatus.mousePosition.y = event.clientY;
 
@@ -99,11 +104,6 @@ export function make_element_draggable(targetElement)
     {
         if (dragStatus.isDragging)
         {
-            if (!dragStatus.isInitialized)
-            {
-                initialize_dragging();
-            }
-
             dragStatus.dragPosition.x += (event.clientX - dragStatus.mousePosition.x);
             dragStatus.dragPosition.y += (event.clientY - dragStatus.mousePosition.y);
 
@@ -178,6 +178,7 @@ export function make_element_draggable(targetElement)
         dragStatus.windowSize.x = window.innerWidth;
         dragStatus.windowSize.y = window.innerHeight;
 
+        update_element_position(false);
         targetElement.style.right = "";
         targetElement.style.bottom = "";
         targetElement.style.transform = "none";

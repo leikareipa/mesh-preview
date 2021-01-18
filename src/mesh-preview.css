@@ -118,6 +118,11 @@ body
     height: 45px;
 }
 
+.mesh-preview > .control-panel.dragging
+{
+    border-color: var(--border-color--highlight);
+}
+
 .mesh-preview > .control-panel .section + .section
 {
     border-top: 1px solid var(--border-color--secondary);

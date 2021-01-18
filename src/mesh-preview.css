@@ -135,6 +135,7 @@ body
 .mesh-preview > .control-panel.dragging .dragger
 {
     cursor: grabbing;
+    border-color: gray;
 }
 
 .mesh-preview > .control-panel hr
@@ -211,15 +212,15 @@ body
 .mesh-preview-transition-drop-enter-active,
 .mesh-preview-transition-drop-leave-active
 {
-    transition: transform 0.25s;
+    transition: transform 0.2s;
 }
 .mesh-preview-transition-drop-enter
 {
-    transform: translateY(-40px);
+    transform: translateY(-40px) scale(2);
 }
 .mesh-preview-transition-drop-leave-to 
 {
-    transform: translateY(40px);
+    transform: translateY(20px) scale(0);
     filter: blur(1px);
     color: var(--color--disabled);
 }

@@ -202,8 +202,8 @@ body
 .mesh-preview-transition-flip-enter-active,
 .mesh-preview-transition-flip-leave-active
 {
-    transition: transform 0.25s,
-                opacity 0.25s;
+    transition: transform 0.2s,
+                opacity 0.2s;
 }
 .mesh-preview-transition-flip-enter
 {
@@ -221,11 +221,11 @@ body
 }
 .mesh-preview-transition-drop-enter
 {
-    transform: translateY(-40px) scale(2);
+    transform: translateY(-50px) scale(2.2);
 }
 .mesh-preview-transition-drop-leave-to 
 {
-    transform: translateY(20px) scale(0);
+    transform: translateY(40px);
     filter: blur(1px);
     color: var(--color--disabled);
 }

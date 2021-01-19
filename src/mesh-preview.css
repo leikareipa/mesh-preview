@@ -219,6 +219,10 @@ body
 {
     transition: transform 0.2s;
 }
+.mesh-preview-transition-drop-enter-active
+{
+    transition: transform 0.1s;
+}
 .mesh-preview-transition-drop-enter
 {
     transform: translateY(-50px) scale(2.2);
